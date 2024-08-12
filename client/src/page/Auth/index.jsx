@@ -4,15 +4,39 @@ import Victory from "@/assets/victory.svg";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { apiClient } from "@/lib/api-client.js";
+import { SIGNUP_ROUTE } from "@/utils/constants.js";
+
 
 const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  const validateSignup = () => {
+    if (!email.length) {
+      toast.error("Email is required.");
+      return false;
+    }if(!password.length){
+      toast.error("Password is required.");
+      return false
+    }
+    if(password != confirmPassword){
+      toast.error("Passwords do not match.");
+      return false
+    }
+    return true;
+  };
+
   const handleLogin = () => {};
 
-  const handleSignup = () => {};
+  const handleSignup = async() => {
+    if(validateSignup()){
+     const response = await apiClient.post(SIGNUP_ROUTE,{ email,password });
+     console.log(response);
+    }
+  };
 
   return (
     <div className="w-[100vw] h-[100vh] flex items-center justify-center">
@@ -20,7 +44,7 @@ const Auth = () => {
         <div className="flex flex-col gap-10 items-center justify-center">
           <div className="flex items-center justify-center flex-col">
             <div className="flex items-center justify-center">
-              <h1 className="text-5xl font-bold md:text-6xl">Welcome</h1>
+              <h1 className="text-5xl font-bold md:text-6xl ">Welcome</h1>
               <img
                 src={Victory}
                 alt="Victory emoji"
