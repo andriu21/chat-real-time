@@ -6,42 +6,81 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { apiClient } from "@/lib/api-client.js";
-import {  SIGNUP_ROUTE } from "@/utils/constants.js";
-
+import { SIGNUP_ROUTE, LOGIN_ROUTE } from "@/utils/constants.js";
+import { useNavigate } from "react-router-dom";
 
 const Auth = () => {
- 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const navigate = useNavigate();
+  const validateLogin = () => {
+    if (!email.length) {
+      toast.error("Email is required.");
+      return false;
+    }
+    if (!password.length) {
+      toast.error("Password is required.");
+      return false;
+    }
+
+    return true;
+  };
 
   const validateSignup = () => {
     if (!email.length) {
       toast.error("Email is required.");
       return false;
-    }if(!password.length){
-      toast.error("Password is required.");
-      return false
     }
-    if(password != confirmPassword){
+    if (!password.length) {
+      toast.error("Password is required.");
+      return false;
+    }
+    if (password != confirmPassword) {
       toast.error("Passwords do not match.");
-      return false
+      return false;
     }
     return true;
   };
 
-  const handleLogin = () => {};
+  const handleLogin = async () => {
+    try {
+      if (validateLogin()) {
+        try {
+          const response = await apiClient.post(
+            LOGIN_ROUTE,
+            { email, password },
+            { withCredentials: true }
+          );
+         if(response.data.user.id){
+          if(response.data.user.profileSetup) navigate("/chat");
+          else navigate("/profile")
+         }
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-  const handleSignup = async() => {
-try {
-  if(validateSignup()){
-    const response = await apiClient.post(SIGNUP_ROUTE,{ email,password });
-    console.log(response);
-    toast.success("Account created successfully.");
-   }
-} catch (error) {
-  console.log(error)
-}
+  const handleSignup = async () => {
+    try {
+      if (validateSignup()) {
+        const response = await apiClient.post(
+          SIGNUP_ROUTE,
+          {
+            email,
+            password,
+          },
+          { withCredentials: true }
+        );
+        if (response.status == 201) navigate("/profile");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -62,7 +101,7 @@ try {
             </p>
           </div>
           <div className="flex items-center justify-center w-full">
-            <Tabs className="w-3/4">
+            <Tabs className="w-3/4" defaultValue="login">
               <TabsList className="bg-transparent rounded-none w-full flex justify-center items-center">
                 <TabsTrigger
                   value="login"
