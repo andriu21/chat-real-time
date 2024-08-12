@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: [true, "Email is required"],
-    unique: true,
+    unique:true
   },
   password: {
     type: String,
@@ -36,7 +36,7 @@ const userSchema = new mongoose.Schema({
 // antes de salvar las contrasena se usa esto para encriptarlo primero y despues guardarla en la base de datos
 
 userSchema.pre("save", async function (next) {
-  const salt = await getSalt();
+  const salt = await genSalt();
   this.password = await hash(this.password, salt);
   next();
 });

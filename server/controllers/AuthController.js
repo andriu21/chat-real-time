@@ -18,7 +18,7 @@ export const signup = async (req, res) => {
     // const existingUser = await User.findOne({ email });
     // if (existingUser) return res.status(400).send("Email already exists");
     const user = await User.create({email,password});
-    res.cookie('jwt',createToken(email,userId),{
+    res.cookie('jwt',createToken(email,user.id),{
         maxAge,
         secure:true,
         sameSite : 'None'
@@ -36,3 +36,5 @@ export const signup = async (req, res) => {
 
   
 };
+
+

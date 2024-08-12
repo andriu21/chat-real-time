@@ -14,7 +14,7 @@ const databaseURL = process.env.DATABASE_URL;
 app.use(
   cors({
     origin: [process.env.ORIGIN],
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    methods :["GET","POST","PUT","PATH","DELETE"],
     credentials: true,
   })
 );
@@ -22,7 +22,7 @@ app.use(
 app.use(CookieParser());
 app.use(express.json());
 
-app.use('/api/auth',authRoutes)
+app.use("/api/auth",authRoutes)
 
 const server = app.listen(port, () => {
   console.log(`Server is running in the port ${port}`);
