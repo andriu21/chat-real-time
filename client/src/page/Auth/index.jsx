@@ -3,11 +3,16 @@ import Background from "@/assets/login2.png";
 import Victory from "@/assets/victory.svg";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  const handleLogin = () => {};
+
+  const handleSignup = () => {};
 
   return (
     <div className="w-[100vw] h-[100vh] flex items-center justify-center">
@@ -58,6 +63,9 @@ const Auth = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
+                <Button className="rounded-full p-6" onClick={handleLogin}>
+                  Login
+                </Button>
               </TabsContent>
               <TabsContent value="signup" className="flex flex-col gap-5">
                 <Input
@@ -81,9 +89,16 @@ const Auth = () => {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                 />
+
+                <Button className="rounded-full p-6" onClick={handleSignup}>
+                  Signup
+                </Button>
               </TabsContent>
             </Tabs>
           </div>
+        </div>
+        <div className="hidden  xl:flex justify-center items-center">
+          <img src={Background} alt="background image login" />
         </div>
       </div>
     </div>
