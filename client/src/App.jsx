@@ -1,4 +1,4 @@
-import React, {  useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Auth from "../src/page/Auth/index.jsx";
 import Chat from "../src/page/Chat/index.jsx";
@@ -20,30 +20,37 @@ const AuthRoute = ({ children }) => {
 };
 
 const App = () => {
-  const { userInfo,setUserInfo } = useAppStore();
-  const [loading, setLoading] = useState(true)
-  useEffect(()=>{
-   const getUserData = async()=>{
-    try {
-      const response = await apiClient.get(GET_USER_INFO,{
-        withCredentials : true,
-      })
+  const { userInfo, setUserInfo } = useAppStore();
+  const [loading, setLoading] = useState(true);
 
-      console.log({response})
-    } catch (error) {
-      console.log(error)
+  useEffect(() => {
+    const getUserData = async () => {
+      try {
+        const response = await apiClient.get(GET_USER_INFO, {
+          withCredentials: true,
+        });
+
+        if (response.status === 200) {
+          setUserInfo(response.data);
+        } else {
+          setUserInfo(undefined);
+        }
+      } catch (error) {
+        setUserInfo(undefined);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (!userInfo) {
+      getUserData();
+    } else {
+      setLoading(false);
     }
-   };
-   if(!userInfo){
-    getUserData();
-   }else{
-    setLoading(false)
-   }
+  }, [userInfo, setUserInfo]);
 
-  },[userInfo,setUserInfo])
-
-  if(loading){
-    return <div>Loading....</div>
+  if (loading) {
+    return <div>Loading....</div>;
   }
 
   return (

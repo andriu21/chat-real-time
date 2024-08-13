@@ -2,6 +2,7 @@ import { compare } from "bcrypt";
 import User from "../models/UserModel.js";
 import jwt from "jsonwebtoken";
 
+
 const maxAge = 3 * 24 * 60 * 60 * 1000;
 
 const createToken = (email, userId) => {
@@ -72,18 +73,19 @@ export const login = async (req, res) => {
 
 export const getUserInfo = async (req, res) => {
   try {
+    const userData = await User.findById(req.userId);
+    if (!userData)
+      return res.status(500).send("User with given id not found!!!");
     return res.status(200).json({
-      user: {
-        id: user.id,
-        email: user.email,
-        profileSetup: user.profileSetup,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        image: user.image,
-        color: user.color,
-      },
+      id: userData.id,
+      email: userData.email,
+      profileSetup: userData.profileSetup,
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      image: userData.image,
+      color: userData.color,
     });
   } catch (error) {
-    return res.status(500).send("Internal server error");
+    return res.status(500).send("Internal server error!!");
   }
 };

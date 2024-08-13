@@ -52,8 +52,9 @@ const Auth = () => {
             { email, password },
             { withCredentials: true }
           );
+          console.log(response.data)
          if(response.data.user.id){
-          if(response.data.user.profileSetup) navigate("/chat");
+          if(response.data.user.profileSetup) {navigate("/chat")}
           else navigate("/profile")
          }
         } catch (error) {
