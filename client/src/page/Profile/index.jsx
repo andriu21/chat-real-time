@@ -11,6 +11,8 @@ import { toast } from "sonner";
 import { apiClient } from "@/lib/api-client";
 import {
   ADD_PROFILE_IMAGE_ROUTE,
+  REMOVE_PROFILE_IMAGE_ROUTER,
+  HOST,
   UPDATE_PROFILE_ROUTE,
 } from "@/utils/constants";
 
@@ -30,6 +32,9 @@ const Profile = () => {
       setFirstName(userInfo.firstName);
       setLastName(userInfo.lastName);
       setSelectedColor(userInfo.color);
+    }
+    if (userInfo.image) {
+      setImage(`${HOST}/${userInfo.image}`);
     }
   }, [userInfo]);
 
@@ -80,27 +85,44 @@ const Profile = () => {
 
   const handleImageChange = async (event) => {
     const file = event.target.files[0];
-    console.log({ file });
+
     if (file) {
       const formData = new FormData();
       formData.append("profile-image", file);
       const response = await apiClient.post(ADD_PROFILE_IMAGE_ROUTE, formData, {
         withCredentials: true,
       });
-
-      if(response.status === 200 && response.data.image){
-        setUserInfo({...userInfo,image:response.data.image})
-        toast.success('Image update successfully!!')
+      if (response.status === 200 && response.data.image) {
+        setUserInfo({ ...userInfo, image: response.data.image });
+        toast.success("Image update successfully!!");
       }
       const reader = new FileReader();
       reader.onload = () => {
-        setImage(reader.result)
-      }
-      reader.readAsDataURL(file)
+        setImage(reader.result);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
-  const handleDeleteImage = async (event) => {};
+  const handleDeleteImage = async (event) => {
+    try {
+      if (image) {
+        const response = await apiClient.delete(REMOVE_PROFILE_IMAGE_ROUTER, {
+          withCredentials: true,
+        });
+        if (response.status == 200) {
+          setUserInfo({ ...userInfo, image: null });
+          setImage(null);
+
+          toast.success("Profile Image remove successfully");
+        } else {
+          toast.error("Error deleted the profile image retry again");
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -119,7 +141,7 @@ const Profile = () => {
               <Avatar className="h-32 w-32 md:w-48 md:h-48 rounded-full ">
                 {image ? (
                   <AvatarImage
-                    src={image}
+                    src={`${image}`}
                     alt="image profile"
                     className="object-cover w-full h-full bg-black"
                   />

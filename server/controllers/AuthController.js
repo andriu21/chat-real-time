@@ -1,6 +1,8 @@
 import { compare } from "bcrypt";
 import User from "../models/UserModel.js";
 import jwt from "jsonwebtoken";
+import { renameSync, unlinkSync } from "fs";
+import { use } from "bcrypt/promises.js";
 
 const maxAge = 3 * 24 * 60 * 60 * 1000;
 
@@ -123,63 +125,48 @@ export const updateProfile = async (req, res) => {
   }
 };
 
-
-
 export const addProfileImage = async (req, res) => {
+  console.log(req.file);
   try {
-   if(!req.file){
-    return res.status(400).send("Please upload a file");
-   }
+    if (!req.file) {
+      return res.status(400).send("Please upload a file");
+    }
 
-   const date = Date.now();
-   let fileName ='upload/profiles'
-    
+    const date = Date.now();
+    let fileName = "uploads/profiles/" + date + req.file.originalname;
+    renameSync(req.file.path, fileName);
+
+    const updateUser = await User.findByIdAndUpdate(
+      req.userId,
+      { image: fileName },
+      { new: true, runValidators: true }
+    );
+
     return res.status(200).json({
-      id: userData.id,
-      email: userData.email,
-      profileSetup: userData.profileSetup,
-      firstName: userData.firstName,
-      lastName: userData.lastName,
-      image: userData.image,
-      color: userData.color,
+      image: updateUser.image,
     });
   } catch (error) {
     return res.status(500).send("Internal server error!!");
   }
 };
 
-
-
-export const removeProfileImage  = async (req, res) => {
+export const removeProfileImage = async (req, res) => {
+  console.log(req.userId)
   try {
     const { userId } = req;
-    const { firstName, lastName, color } = req.body;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
 
-    if (!firstName || !lastName || !color)
-      return res
-        .status(400)
-        .send("firstname , lastname and color is required !!!");
-
-    const userData = await User.findByIdAndUpdate(
-      userId,
-      {
-        firstName,
-        lastName,
-        color,
-        profileSetup: true,
-      },
-      { new: true, runValidators: true }
-    );
-    return res.status(200).json({
-      id: userData.id,
-      email: userData.email,
-      profileSetup: userData.profileSetup,
-      firstName: userData.firstName,
-      lastName: userData.lastName,
-      image: userData.image,
-      color: userData.color,
-    });
+    if (user.image) {
+      unlinkSync(user.image);
+    }
+    user.image = null;
+    await user.save();
+    console.log(user)
+    return res.status(200).send("Profile image delete successfully!!!");
   } catch (error) {
-    return res.status(500).send("Internal server error!!");
+    return res.status(520).send("Internal server error!!");
   }
 };
