@@ -151,7 +151,7 @@ export const addProfileImage = async (req, res) => {
 };
 
 export const removeProfileImage = async (req, res) => {
-  console.log(req.userId)
+  console.log(req.userId);
   try {
     const { userId } = req;
     const user = await User.findById(userId);
@@ -164,8 +164,21 @@ export const removeProfileImage = async (req, res) => {
     }
     user.image = null;
     await user.save();
-    console.log(user)
+    console.log(user);
     return res.status(200).send("Profile image delete successfully!!!");
+  } catch (error) {
+    return res.status(520).send("Internal server error!!");
+  }
+};
+
+export const logoutProfile = async (req, res) => {
+  try {
+    res.cookie("jwt", "", {
+      maxAge: 1,
+      secure: true,
+      sameSite: "none",
+    });
+    return res.status(200)
   } catch (error) {
     return res.status(520).send("Internal server error!!");
   }

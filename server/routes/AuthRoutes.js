@@ -5,7 +5,8 @@ import {
   getUserInfo,
   updateProfile,
   addProfileImage,
-  removeProfileImage
+  removeProfileImage,
+  logoutProfile,
 } from "../controllers/AuthController.js";
 import { verifyToken } from "../middlewares/AuthMiddlewares.js";
 import multer from "multer"; // esto se usa para poder subir archivos al servidor
@@ -23,6 +24,7 @@ authRoutes.post(
   upload.single("profile-image"),
   addProfileImage
 ); // aqui le decimos el archivo a salvar
-authRoutes.delete("/remove-profile-image",verifyToken,removeProfileImage)
+authRoutes.delete("/remove-profile-image", verifyToken, removeProfileImage);
+authRoutes.post("/logout", logoutProfile);
 
 export default authRoutes;
