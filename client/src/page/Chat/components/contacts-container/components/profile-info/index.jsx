@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAppStore } from "@/store";
-import { HOST } from "@/utils/constants";
+import { HOST, LOGOUT_ROUTE } from "@/utils/constants";
 import {
   Tooltip,
   TooltipContent,
@@ -10,14 +10,19 @@ import {
 import { FiEdit2 } from "react-icons/fi";
 import { IoPowerSharp } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-import { LogOut } from "lucide-react";
+import { apiClient } from "@/lib/api-client";
 
 export const ProfileInfo = () => {
-  const { userInfo } = useAppStore();
+  const { userInfo , setUserInfo} = useAppStore();
   const navigate = useNavigate();
 
   const logout = async () => {
     try {
+        const logoutProfile = await apiClient.post(LOGOUT_ROUTE,{},{withCredentials:true});
+        if(logoutProfile.status == 200){
+            navigate('/auth')
+            setUserInfo(null);
+        }
     } catch (error) {
       console.log(error);
     }

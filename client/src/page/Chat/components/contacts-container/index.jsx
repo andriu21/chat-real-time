@@ -1,5 +1,6 @@
 import Logo from "@/assets/logo1200.png";
 import { ProfileInfo } from "./components/profile-info";
+import { NewDm } from "./components/new-dm";
 const LogoCodeChat = () => {
   return (
     <div className="flex justify-start items-center gap-2">
@@ -27,6 +28,7 @@ export const ContactContainer = () => {
       <div className="my-5">
           <div className="flex items-center justify-between pr-10">
               < Title text={'Direct Message'}/>
+              <NewDm />
           </div>
       </div>
       <div className="my-5">

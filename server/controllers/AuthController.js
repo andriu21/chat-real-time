@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import { renameSync, unlinkSync } from "fs";
 import { use } from "bcrypt/promises.js";
 
+
 const maxAge = 3 * 24 * 60 * 60 * 1000;
 
 const createToken = (email, userId) => {
@@ -56,6 +57,7 @@ export const login = async (req, res) => {
       secure: true,
       sameSite: "None",
     });
+    
     return res.status(200).json({
       user: {
         id: user.id,
@@ -172,13 +174,15 @@ export const removeProfileImage = async (req, res) => {
 };
 
 export const logoutProfile = async (req, res) => {
+ 
   try {
     res.cookie("jwt", "", {
       maxAge: 1,
       secure: true,
       sameSite: "none",
     });
-    return res.status(200)
+    
+    return res.status(200).send('logout successfully')
   } catch (error) {
     return res.status(520).send("Internal server error!!");
   }

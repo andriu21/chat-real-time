@@ -52,11 +52,13 @@ const Auth = () => {
             { email, password },
             { withCredentials: true }
           );
-          console.log(response.data)
-         if(response.data.user.id){
-          if(response.data.user.profileSetup) {navigate("/chat")}
-          else navigate("/profile")
+         
+       if(response.status == 200){
+        if(response.data.user.id){
+          toast.success('Reload page for progress please for you secured')
+          response.data.user.profileSetup ? navigate("/chat")  : navigate("/profile")
          }
+       }
         } catch (error) {
           console.log(error);
         }
