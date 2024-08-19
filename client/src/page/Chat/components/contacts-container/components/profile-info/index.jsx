@@ -11,6 +11,7 @@ import { FiEdit2 } from "react-icons/fi";
 import { IoPowerSharp } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { apiClient } from "@/lib/api-client";
+import { getColor } from "@/lib/utils";
 
 export const ProfileInfo = () => {
   const { userInfo , setUserInfo} = useAppStore();
@@ -41,9 +42,9 @@ export const ProfileInfo = () => {
               />
             ) : (
               <div
-                className={`uppercase h-12 w-12  text-lg border-[1px] flex items-center justify-center rounded-full ${getColor(
-                  userInfo.color
-                )}`}
+                className={`uppercase h-12 w-12  text-lg border-[1px] flex items-center justify-center rounded-full ${getColor(userInfo.color)
+                  
+                }`}
               >
                 {userInfo.firstName
                   ? userInfo.firstName.split("").shift()

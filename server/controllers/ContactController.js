@@ -1,3 +1,6 @@
+import User from "../models/UserModel.js";
+
+
 export const searchContacts = async (req, res) => {
   try {
     const { searchTerm } = req.body;
@@ -6,10 +9,11 @@ export const searchContacts = async (req, res) => {
     }
 
     const sanitizedSearchTerm = searchTerm.replace(
-      /[/*+?~${}()|[\]\\]/g,
+      /[`!#$%^&*()_+\-=\[\]{};':"\\|,<>\/?~]/g,
       "\\$&"
     );
     const regex = new RegExp(sanitizedSearchTerm, "i");
+  
     const contacts = await User.find({
       $and: [
         { _id: { $ne: req.userId } },
@@ -17,9 +21,10 @@ export const searchContacts = async (req, res) => {
       ],
     });
 
+
     return res.status(200).json({contacts})
 
-    return res.status(200).send("logout successfully");
+   
   } catch (error) {
     return res.status(520).send("Internal server error!!");
   }
