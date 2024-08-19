@@ -1,7 +1,7 @@
 import { useAppStore } from "@/store";
 import { HOST } from "@/utils/constants";
 import { createContext, useContext, useEffect, useRef } from "react";
-import { io } from "socket.io-client";
+import  io  from "socket.io-client";
 
 const SocketContext = createContext(null);
 
@@ -14,10 +14,10 @@ export const SocketProvider = ({ children }) => {
   const { userInfo } = useAppStore();
 
   useEffect(() => {  
-    // esto lo modifiscate tu elimina la funcion si no  sirve de anda
-    const validationSocket = async () => {
+  
+   console.log(HOST)
       if (userInfo) {
-        socket.current = await io(HOST, {
+        socket.current =  io(HOST, {
           withCredentials: true,
           query: { userId: userInfo.id },
         });
@@ -25,11 +25,11 @@ export const SocketProvider = ({ children }) => {
           console.log("Connected to socket server");
         });
 
-        return socket.current.disconnect();
+        return ()=>{
+            socket.current.disconnect();
+        }
       }
-    };
-
-    validationSocket()
+   
   }, [userInfo]);
 
   return (

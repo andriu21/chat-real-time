@@ -1,15 +1,16 @@
-import { Server as SockerIOServer } from "socket.io";
+import { Server as IOServer } from "socket.io";
 
 const setupSocket = (server) => {
-  const io = new SockerIOServer(server, {
+  const io = new IOServer(server, {
     cors: {
       origin: process.env.ORIGIN,
       methods: ["GET", "POST"],
-      credentials: true,
-    },
+      credentials: true
+    } 
   });
 
   const userSocketMap = new Map();
+
   const disconnect = (socket) => {
     console.log(`Client disconnected : ${socket.id}`);
     for (const [userId, socketId] of userSocketMap.entries()) {
