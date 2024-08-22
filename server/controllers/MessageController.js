@@ -1,20 +1,24 @@
-import User from "../models/UserModel.js";
+import Message from "../models/MessageModel.js";
 
-export const searchContacts = async (req, res) => {
+export const getMessages = async (req, res) => {
   try {
-    const { searchTerm } = req.body;
-    if (searchTerm === undefined || searchTerm === null) {
-      return res.status(400).send("searchTerm is required.");
+    const user1 = req.userId;
+    const user2 = req.body.id;
+
+    if (!user1 || !user2) {
+      return res.status(400).send(" Both user ID's are required.");
     }
 
-    const contacts = await User.find({
-      $and: [
-        { _id: { $ne: req.userId } },
-        { $or: [{ firstName: regex }, { lastName: regex }, { email: regex }] },
+    const messages = await Message.find({
+      $or: [
+        { sender: user1, recipient: user2 },
+        { sender: user2, recipient: user1 },
       ],
-    });
+    }).sort({ timestamp: 1 });
 
-    return res.status(200).json({ contacts });
+    return res.status(200).json({ messages });
+
+    
   } catch (error) {
     return res.status(520).send("Internal server error!!");
   }
