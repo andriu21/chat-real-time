@@ -8,7 +8,6 @@ import contactRoutes from "./routes/ContactRoutes.js";
 import setupSocket from "./socket.js";
 import messagesRoutes from "./routes/MessagesRoutes.js";
 
-
 dotenv.config();
 
 const app = express();
@@ -18,26 +17,26 @@ const databaseURL = process.env.DATABASE_URL;
 app.use(
   cors({
     origin: [process.env.ORIGIN],
-    methods :["GET","POST","PUT","PATH","DELETE"],
+    methods: ["GET", "POST", "PUT", "PATH", "DELETE"],
     credentials: true,
   })
 );
 
-app.use('/uploads/profiles',express.static('uploads/profiles'))
+app.use("/uploads/profiles", express.static("uploads/profiles"));
+app.use("/uploads/files", express.static("uploads/files"));
 
 app.use(CookieParser());
 app.use(express.json());
 
-
-app.use("/api/auth",authRoutes)
-app.use('/api/contacts',contactRoutes)
-app.use("/api/messages",messagesRoutes)
+app.use("/api/auth", authRoutes);
+app.use("/api/contacts", contactRoutes);
+app.use("/api/messages", messagesRoutes);
 
 const server = app.listen(port, () => {
   console.log(`Server is running in the port ${port}`);
 });
 
-setupSocket(server)
+setupSocket(server);
 
 mongoose
   .connect(databaseURL)
