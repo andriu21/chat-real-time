@@ -42,7 +42,9 @@ export const ChatHeader = () => {
             {selectedChatType === "channel" && selectedChatData.name}
             {selectedChatType === "contact" && selectedChatData.firstName
               ? `${selectedChatData.firstName}  ${selectedChatData.lastName}`
-              : `${selectedChatData.email}`}
+              : selectedChatData.email
+              ? `${selectedChatData.email}`
+              : ""}
           </div>
         </div>
         <div className="flex items-center justify-center gap-5">

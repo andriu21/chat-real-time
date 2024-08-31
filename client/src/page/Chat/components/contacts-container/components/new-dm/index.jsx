@@ -17,7 +17,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import Lottie from "react-lottie";
 import { animationDefaultOptions } from "@/lib/utils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { apiClient } from "@/lib/api-client";
 import { SEARCH_CONTACTS_ROUTES } from "@/utils/constants";
@@ -28,6 +28,7 @@ export const NewDm = () => {
   const { setSelectedChatType, setSelectedChatData } = useAppStore();
   const [openNewContactModal, setOpenNewContactModal] = useState(false);
   const [searchedContact, setSearchedContact] = useState([]);
+
 
   const searchContacts = async (searchTerm) => {
     try {
@@ -47,6 +48,11 @@ export const NewDm = () => {
       console.log(error);
     }
   };
+
+useEffect(()=>{
+  searchContacts()
+},[setSearchedContact])
+
 
   const selectNewContact = (contact) => {
     setOpenNewContactModal(false);

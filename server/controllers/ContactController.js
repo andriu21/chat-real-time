@@ -101,7 +101,7 @@ export const getAllContacts = async (req, res) => {
       "firstName lastName _id"
     );
 
-    const contacts = users.map((user) => ({
+    const contacts = await users.map((user) => ({
       label: user.firstName ? `${user.firstName} ${user.lastName}` : user.email,
       value:user._id
     }));
